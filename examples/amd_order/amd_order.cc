@@ -24,12 +24,13 @@ using value_type = float;
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
-    cout << "Usage: ./amd_order <matrix_market_file>\n";
+    cout << "Usage: ./amd_order <matrix_market_file> <reorder_output_file>\n";
     cout << "Hint: You can use the edgelist: examples/data/com-dblp.mtx\n";
     return 1;
   }
   cout << "F t re  s sp r e!" << endl;
   string file_name = argv[1];
+  string out_file_name = argv[2];
 
   cout << "********************************" << endl;
 
@@ -78,6 +79,12 @@ int main(int argc, char *argv[]) {
     order_is_correct = false;
     return 1;
   }
+
+  // Save the result in file
+  std::ofstream amd_order_file(out_file_name.c_str());
+  assert(amd_order_file.is_open() && "AMD order output file is not open!");
+  std::copy(&amd_reorder[0], &amd_reorder[num_rows], std::ostream_iterator<vertex_type>(amd_order_file, "\n"));
+  amd_order_file.close();
 
   delete[] amd_reorder;
 
