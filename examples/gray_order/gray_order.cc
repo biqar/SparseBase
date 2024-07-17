@@ -22,13 +22,14 @@ using value_type = float;
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
-    cout << "Usage: ./gray_order <matrix_market_file>\n";
+    cout << "Usage: ./gray_order <matrix_market_file> <reorder_output_file>\n";
     cout
         << "Hint: You can use the edgelist: examples/data/com-dblp.mtx\n";
     return 1;
   }
   cout << "F t re  s sp r e!" << endl;
   string file_name = argv[1];
+  string out_file_name = argv[2];
 
   cout << "********************************" << endl;
 
@@ -81,6 +82,12 @@ int main(int argc, char *argv[]) {
     order_is_correct = false;
     return 1;
   }
+
+  // Save the result in file
+  std::ofstream gray_order_file(out_file_name.c_str());
+  assert(gray_order_file.is_open() && "Gray order output file is not open!");
+  std::copy(&gray_reorder[0], &gray_reorder[num_rows], std::ostream_iterator<vertex_type>(gray_order_file, "\n"));
+  gray_order_file.close();
 
   delete gray_reorder;
 
